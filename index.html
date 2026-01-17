@@ -1,23 +1,932 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<title>HAISHADOWL</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<header>
-  <h1>HAISHADOWL</h1>
-  <nav>
-    <a href="index.html">Boutique</a>
-    <a href="cart.html">Panier 🛒</a>
-    <a href="login.html">Connexion</a>
-  </nav>
-</header>
-
-<section class="products" id="products"></section>
-
-<script src="script.js"></script>
-</body>
+<!doctype html>
+<html lang="fr" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ma Boutique en Ligne</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&amp;family=Montserrat:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    .font-display {
+      font-family: 'Playfair Display', serif;
+    }
+    
+    .font-body {
+      font-family: 'Montserrat', sans-serif;
+    }
+    
+    .hero-background {
+      background: 
+        linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(88, 28, 135, 0.88) 50%, rgba(219, 39, 119, 0.85) 100%),
+        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.03) 35px, rgba(255,255,255,.03) 70px);
+      background-size: cover, auto;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero-background::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%);
+      animation: pulse-glow 8s ease-in-out infinite;
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+    
+    .glass-morphism {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+    
+    .gradient-primary {
+      background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%);
+    }
+    
+    .gradient-secondary {
+      background: linear-gradient(135deg, #0f172a 0%, #581c87 100%);
+    }
+    
+    .product-card {
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      transform-style: preserve-3d;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-12px) rotateX(2deg);
+      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .cart-item-enter {
+      animation: slideInRight 0.4s ease-out;
+    }
+    
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    .badge-pulse {
+      animation: badge-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    @keyframes badge-pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.15);
+        opacity: 0.9;
+      }
+    }
+    
+    .floating-animation {
+      animation: floating 3s ease-in-out infinite;
+    }
+    
+    @keyframes floating {
+      0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+      }
+      25% {
+        transform: translateY(-10px) rotate(2deg);
+      }
+      75% {
+        transform: translateY(-5px) rotate(-2deg);
+      }
+    }
+    
+    .shimmer {
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s infinite;
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    
+    .fade-in-up {
+      animation: fadeInUp 0.6s ease-out forwards;
+      opacity: 0;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .section-pattern {
+      background-color: #fafafa;
+      background-image: 
+        radial-gradient(circle at 25% 25%, rgba(124, 58, 237, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(219, 39, 119, 0.05) 0%, transparent 50%);
+    }
+    
+    .btn-shine {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-shine::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s;
+    }
+    
+    .btn-shine:hover::before {
+      left: 100%;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #7c3aed, #db2777);
+      border-radius: 10px;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #6d28d9, #be185d);
+    }
+    
+    .category-chip {
+      transition: all 0.3s ease;
+    }
+    
+    .category-chip:hover {
+      transform: scale(1.08) rotate(-2deg);
+    }
+    
+    .location-indicator {
+      animation: location-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+    
+    @keyframes location-ping {
+      75%, 100% {
+        transform: scale(1.5);
+        opacity: 0;
+      }
+    }
+    
+    .stock-badge {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.4rem;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full font-body">
+  <div id="app" class="h-full overflow-auto"><!-- Navigation Bar -->
+   <nav class="fixed top-0 left-0 right-0 z-50 glass-morphism shadow-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="flex items-center justify-between h-16"><!-- Logo & Brand -->
+      <div class="flex items-center gap-3">
+       <div class="text-4xl floating-animation">
+        🏪
+       </div>
+       <div>
+        <h1 id="nav-brand" class="text-xl sm:text-2xl font-display font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Ma Boutique</h1>
+       </div>
+      </div><!-- Actions -->
+      <div class="flex items-center gap-2 sm:gap-4"><button onclick="showAdminPanel()" class="hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-all font-medium text-gray-700 text-sm"> <span>⚙️</span> <span>Admin</span> </button> <button onclick="toggleCart()" class="relative btn-shine gradient-primary text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-lg hover:shadow-xl transition-all font-semibold"> <span class="text-xl sm:text-2xl">🛒</span> <span id="cart-badge" class="absolute -top-1 -right-1 badge-pulse bg-red-500 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center border-2 border-white"> 0 </span> </button>
+      </div>
+     </div>
+    </div>
+   </nav><!-- Hero Section -->
+   <section class="hero-background pt-24 pb-20 px-4 relative">
+    <div class="max-w-6xl mx-auto text-center relative z-10">
+     <div class="inline-block mb-6">
+      <div class="text-7xl sm:text-8xl floating-animation">
+       🌟
+      </div>
+     </div>
+     <h2 id="hero-title" class="text-4xl sm:text-5xl md:text-7xl font-display font-black text-white mb-4 drop-shadow-2xl fade-in-up" style="animation-delay: 0.1s">Ma Boutique</h2>
+     <p id="hero-tagline" class="text-xl sm:text-2xl md:text-3xl text-white/90 font-light mb-8 fade-in-up" style="animation-delay: 0.2s">Les meilleurs produits au meilleur prix</p>
+     <div class="fade-in-up" style="animation-delay: 0.3s">
+      <p id="welcome-msg" class="text-lg sm:text-xl text-white/80 mb-8 max-w-2xl mx-auto">Bienvenue dans notre boutique!</p>
+      <div class="flex flex-wrap justify-center gap-3">
+       <div class="glass-morphism px-5 py-3 rounded-full text-gray-800 font-semibold text-sm category-chip">
+        ⚡ Livraison Rapide
+       </div>
+       <div class="glass-morphism px-5 py-3 rounded-full text-gray-800 font-semibold text-sm category-chip">
+        💎 Qualité Premium
+       </div>
+       <div class="glass-morphism px-5 py-3 rounded-full text-gray-800 font-semibold text-sm category-chip">
+        🔒 Paiement Sécurisé
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Admin Button Mobile -->
+   <div class="sm:hidden px-4 py-4 section-pattern"><button onclick="showAdminPanel()" class="w-full gradient-secondary text-white py-4 rounded-2xl font-bold text-base shadow-lg flex items-center justify-center gap-2"> <span class="text-2xl">⚙️</span> <span>Panneau Administrateur</span> </button>
+   </div><!-- Products Section -->
+   <section class="section-pattern py-12 px-4">
+    <div class="max-w-7xl mx-auto"><!-- Section Header -->
+     <div class="flex flex-col sm:flex-row items-center justify-between mb-10 gap-4">
+      <h3 class="text-3xl sm:text-4xl font-display font-bold text-gray-800"><span class="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"> Nos Produits </span> <span class="text-4xl ml-2">✨</span></h3>
+      <div id="products-count" class="glass-morphism px-6 py-3 rounded-full font-bold text-gray-700">
+       0 articles
+      </div>
+     </div><!-- Products Grid -->
+     <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8"><!-- Products will be rendered here -->
+     </div><!-- Empty State -->
+     <div id="empty-state" class="hidden text-center py-20">
+      <div class="text-8xl mb-6">
+       📦
+      </div>
+      <h4 class="text-2xl font-display font-bold text-gray-700 mb-3">Aucun produit disponible</h4>
+      <p class="text-gray-500 text-lg">L'administrateur n'a pas encore ajouté de produits.</p>
+     </div>
+    </div>
+   </section><!-- Footer -->
+   <footer class="gradient-secondary text-white py-8 px-4">
+    <div class="max-w-7xl mx-auto text-center">
+     <div class="text-4xl mb-4">
+      🏪
+     </div>
+     <p id="footer-text" class="text-lg mb-4">Merci de votre confiance</p>
+     <p class="text-white/60 text-sm">© 2024 - Tous droits réservés</p>
+    </div>
+   </footer><!-- Cart Sidebar -->
+   <div id="cart-overlay" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 transition-opacity" onclick="toggleCart()"></div>
+   <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full sm:w-[450px] bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-500 ease-out flex flex-col"><!-- Cart Header -->
+    <div class="gradient-primary text-white p-6 shadow-lg">
+     <div class="flex items-center justify-between">
+      <h3 class="text-2xl font-display font-bold flex items-center gap-3"><span class="text-3xl">🛒</span> <span>Mon Panier</span></h3><button onclick="toggleCart()" class="p-2 hover:bg-white/20 rounded-full transition-all">
+       <svg class="w-7 h-7" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+       </svg></button>
+     </div>
+    </div><!-- Cart Items -->
+    <div id="cart-items" class="flex-1 overflow-auto p-4 custom-scrollbar"><!-- Cart items will be rendered here -->
+    </div><!-- Empty Cart -->
+    <div id="cart-empty" class="flex-1 flex flex-col items-center justify-center p-6">
+     <div class="text-7xl mb-6 floating-animation">
+      🛒
+     </div>
+     <h4 class="text-xl font-bold text-gray-700 mb-2">Votre panier est vide</h4>
+     <p class="text-gray-500 text-center">Ajoutez des produits pour commencer</p>
+    </div><!-- Cart Footer -->
+    <div id="cart-footer" class="hidden border-t-2 p-6 bg-gradient-to-b from-white to-gray-50">
+     <div class="mb-6">
+      <div class="flex justify-between items-center mb-2"><span class="text-gray-600 font-medium">Sous-total:</span> <span id="cart-subtotal" class="text-xl font-bold text-gray-800">0 FCFA</span>
+      </div>
+      <div class="flex justify-between items-center pt-3 border-t-2 border-purple-100"><span class="text-lg font-bold text-gray-800">Total:</span> <span id="cart-total" class="text-3xl font-display font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"> 0 FCFA </span>
+      </div>
+     </div><button onclick="checkout()" class="w-full btn-shine gradient-primary text-white py-5 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all flex items-center justify-center gap-3"> <span class="text-2xl">📱</span> <span>Commander Maintenant</span> </button>
+     <p class="text-xs text-gray-500 text-center mt-4">📲 Commande envoyée via WhatsApp &amp; Email</p>
+    </div>
+   </div><!-- Admin Modal -->
+   <div id="admin-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col animate-scale-in"><!-- Admin Header -->
+     <div class="gradient-secondary text-white p-6 shadow-lg">
+      <div class="flex items-center justify-between">
+       <h3 class="text-2xl font-display font-bold flex items-center gap-3"><span class="text-3xl">⚙️</span> <span>Panneau Admin</span></h3><button onclick="closeAdminPanel()" class="p-2 hover:bg-white/20 rounded-full transition-all">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg></button>
+      </div>
+     </div><!-- Admin Content -->
+     <div class="flex-1 overflow-auto p-6 custom-scrollbar"><!-- Add Product Form -->
+      <div class="mb-8">
+       <h4 class="text-xl font-display font-bold text-gray-800 mb-6 flex items-center gap-2"><span class="text-2xl">➕</span> <span>Ajouter un Produit</span></h4>
+       <form id="product-form" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+         <div><label for="product-name" class="block text-sm font-semibold text-gray-700 mb-2">Nom du produit *</label> <input type="text" id="product-name" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all outline-none" placeholder="Ex: Smartphone XYZ">
+         </div>
+         <div><label for="product-price" class="block text-sm font-semibold text-gray-700 mb-2">Prix (FCFA) *</label> <input type="number" id="product-price" required min="0" step="100" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all outline-none" placeholder="Ex: 50000">
+         </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+         <div><label for="product-category" class="block text-sm font-semibold text-gray-700 mb-2">Catégorie</label> <select id="product-category" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all outline-none"> <option value="electronique">📱 Électronique</option> <option value="mode">👕 Mode</option> <option value="maison">🏠 Maison</option> <option value="beaute">💄 Beauté</option> <option value="sport">⚽ Sport</option> <option value="alimentation">🍎 Alimentation</option> <option value="livres">📚 Livres</option> <option value="autres">📦 Autres</option> </select>
+         </div>
+         <div><label for="product-stock" class="block text-sm font-semibold text-gray-700 mb-2">Stock disponible</label> <input type="number" id="product-stock" min="0" value="10" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all outline-none" placeholder="Ex: 10">
+         </div>
+        </div>
+        <div><label for="product-emoji" class="block text-sm font-semibold text-gray-700 mb-2">Icône du produit</label> <select id="product-emoji" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all outline-none text-2xl"> <option value="📱">📱 Téléphone</option> <option value="💻">💻 Ordinateur</option> <option value="👕">👕 Vêtement</option> <option value="👟">👟 Chaussures</option> <option value="🎧">🎧 Casque</option> <option value="📷">📷 Appareil photo</option> <option value="⌚">⌚ Montre</option> <option value="💄">💄 Cosmétique</option> <option value="🎒">🎒 Sac</option> <option value="🏠">🏠 Décoration</option> <option value="🍎">🍎 Nourriture</option> <option value="📚">📚 Livre</option> <option value="🎮">🎮 Jeu vidéo</option> <option value="⚽">⚽ Sport</option> <option value="🎨">🎨 Art</option> <option value="🔧">🔧 Outil</option> </select>
+        </div>
+        <div><label for="product-description" class="block text-sm font-semibold text-gray-700 mb-2">Description</label> <textarea id="product-description" rows="3" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all outline-none resize-none" placeholder="Décrivez votre produit..."></textarea>
+        </div><button type="submit" id="submit-btn" class="w-full btn-shine gradient-primary text-white py-4 rounded-xl font-bold text-base shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"> <span class="text-xl">➕</span> <span>Ajouter le Produit</span> </button>
+       </form>
+      </div><!-- Products List -->
+      <div>
+       <h4 class="text-xl font-display font-bold text-gray-800 mb-4 flex items-center gap-2"><span class="text-2xl">📦</span> <span>Produits Existants (<span id="admin-count">0</span>)</span></h4>
+       <div id="admin-products" class="space-y-3 max-h-80 overflow-auto custom-scrollbar"><!-- Admin products list -->
+       </div>
+       <div id="admin-empty" class="hidden text-center py-8">
+        <div class="text-5xl mb-3">
+         📦
+        </div>
+        <p class="text-gray-500">Aucun produit ajouté</p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div><!-- Toast Notification -->
+   <div id="toast" class="fixed bottom-6 right-6 transform translate-y-32 opacity-0 transition-all duration-500 z-50">
+    <div class="glass-morphism rounded-2xl px-6 py-4 shadow-2xl flex items-center gap-4 min-w-[280px]"><span id="toast-icon" class="text-3xl">✅</span> <span id="toast-message" class="font-semibold text-gray-800">Message</span>
+    </div>
+   </div><!-- Location Status -->
+   <div id="location-badge" class="fixed bottom-6 left-6 glass-morphism rounded-full px-5 py-3 shadow-xl z-40 flex items-center gap-3">
+    <div class="relative"><span id="location-icon" class="text-2xl">📍</span> <span class="location-indicator absolute inset-0 rounded-full bg-green-400 opacity-75"></span>
+    </div><span id="location-text" class="font-semibold text-gray-700 text-sm">Localisation...</span>
+   </div>
+  </div>
+  <script>
+    // Configuration
+    const WHATSAPP_NUMBER = '22890114140';
+    const EMAIL_ADDRESS = 'ulrich@simlewa.com';
+    
+    // State
+    let products = [];
+    let cart = [];
+    let userLocation = null;
+    let config = {};
+    
+    const defaultConfig = {
+      shop_name: 'Ma Boutique',
+      shop_tagline: 'Les meilleurs produits au meilleur prix',
+      welcome_message: 'Bienvenue dans notre boutique!',
+      footer_text: 'Merci de votre confiance'
+    };
+    
+    // Geolocation
+    function initGeolocation() {
+      const icon = document.getElementById('location-icon');
+      const text = document.getElementById('location-text');
+      
+      if ('geolocation' in navigator) {
+        icon.textContent = '🔄';
+        text.textContent = 'Détection...';
+        
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            userLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+              accuracy: Math.round(position.coords.accuracy)
+            };
+            icon.textContent = '✅';
+            text.textContent = 'Localisé';
+            console.log('📍 Client location:', userLocation);
+          },
+          (error) => {
+            icon.textContent = '❌';
+            text.textContent = 'Non disponible';
+            console.error('Location error:', error);
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0
+          }
+        );
+      } else {
+        icon.textContent = '❌';
+        text.textContent = 'Non supporté';
+      }
+    }
+    
+    // Toast notification
+    function showToast(message, icon = '✅') {
+      const toast = document.getElementById('toast');
+      const toastIcon = document.getElementById('toast-icon');
+      const toastMessage = document.getElementById('toast-message');
+      
+      toastIcon.textContent = icon;
+      toastMessage.textContent = message;
+      
+      toast.classList.remove('translate-y-32', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-32', 'opacity-0');
+      }, 4000);
+    }
+    
+    // Render products
+    function renderProducts() {
+      const grid = document.getElementById('products-grid');
+      const emptyState = document.getElementById('empty-state');
+      const countEl = document.getElementById('products-count');
+      
+      if (products.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        countEl.textContent = '0 articles';
+        return;
+      }
+      
+      emptyState.classList.add('hidden');
+      countEl.textContent = `${products.length} article${products.length > 1 ? 's' : ''}`;
+      
+      const existingIds = new Set([...grid.children].map(el => el.dataset.productId));
+      const newIds = new Set(products.map(p => p.id));
+      
+      [...grid.children].forEach(el => {
+        if (!newIds.has(el.dataset.productId)) {
+          el.remove();
+        }
+      });
+      
+      products.forEach((product, index) => {
+        let card = grid.querySelector(`[data-product-id="${product.id}"]`);
+        
+        if (!card) {
+          card = document.createElement('div');
+          card.dataset.productId = product.id;
+          card.className = 'product-card glass-morphism rounded-3xl overflow-hidden shadow-lg fade-in-up';
+          card.style.animationDelay = `${index * 0.08}s`;
+          grid.appendChild(card);
+        }
+        
+        const categoryEmojis = {
+          electronique: '📱',
+          mode: '👕',
+          maison: '🏠',
+          beaute: '💄',
+          sport: '⚽',
+          alimentation: '🍎',
+          livres: '📚',
+          autres: '📦'
+        };
+        
+        const stockStatus = product.stock > 10 ? 'En stock' : product.stock > 0 ? `Stock limité (${product.stock})` : 'Rupture';
+        const stockColor = product.stock > 10 ? 'bg-green-100 text-green-700' : product.stock > 0 ? 'bg-orange-100 text-orange-700' : 'bg-red-100 text-red-700';
+        
+        card.innerHTML = `
+          <div class="relative h-48 bg-gradient-to-br from-purple-100 via-pink-50 to-purple-50 flex items-center justify-center overflow-hidden">
+            <div class="shimmer absolute inset-0 opacity-30"></div>
+            <span class="text-8xl relative z-10">${product.image_emoji || '📦'}</span>
+            <span class="stock-badge absolute top-3 right-3 ${stockColor} font-bold rounded-full px-3 py-1">
+              ${stockStatus}
+            </span>
+          </div>
+          
+          <div class="p-5">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-sm font-bold px-3 py-1 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 rounded-full">
+                ${categoryEmojis[product.category] || '📦'} ${product.category || 'Autre'}
+              </span>
+            </div>
+            
+            <h4 class="font-display font-bold text-gray-800 text-xl mb-2 line-clamp-2">
+              ${product.name}
+            </h4>
+            
+            <p class="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
+              ${product.description || 'Découvrez ce produit exceptionnel'}
+            </p>
+            
+            <div class="flex items-center justify-between pt-3 border-t-2 border-gray-100">
+              <div>
+                <p class="text-xs text-gray-500 font-medium mb-1">Prix</p>
+                <p class="text-2xl font-display font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  ${product.price.toLocaleString()} <span class="text-base">FCFA</span>
+                </p>
+              </div>
+              
+              <button 
+                onclick="addToCart('${product.id}')" 
+                ${product.stock === 0 ? 'disabled' : ''}
+                class="btn-shine gradient-primary text-white px-5 py-3 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition-all flex items-center gap-2 ${product.stock === 0 ? 'opacity-50 cursor-not-allowed' : ''}">
+                <span class="text-lg">🛒</span>
+                <span>${product.stock === 0 ? 'Rupture' : 'Ajouter'}</span>
+              </button>
+            </div>
+          </div>
+        `;
+      });
+    }
+    
+    // Cart functions
+    function addToCart(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product || product.stock === 0) return;
+      
+      const existingItem = cart.find(item => item.id === productId);
+      
+      if (existingItem) {
+        if (existingItem.quantity >= product.stock) {
+          showToast('Stock maximum atteint', '⚠️');
+          return;
+        }
+        existingItem.quantity++;
+      } else {
+        cart.push({ ...product, quantity: 1 });
+      }
+      
+      updateCartUI();
+      showToast(`${product.name} ajouté au panier`, '🛒');
+    }
+    
+    function removeFromCart(productId) {
+      cart = cart.filter(item => item.id !== productId);
+      updateCartUI();
+      showToast('Article retiré du panier', '🗑️');
+    }
+    
+    function updateQuantity(productId, delta) {
+      const item = cart.find(i => i.id === productId);
+      const product = products.find(p => p.id === productId);
+      
+      if (item && product) {
+        const newQuantity = item.quantity + delta;
+        
+        if (newQuantity <= 0) {
+          removeFromCart(productId);
+        } else if (newQuantity > product.stock) {
+          showToast('Stock insuffisant', '⚠️');
+        } else {
+          item.quantity = newQuantity;
+          updateCartUI();
+        }
+      }
+    }
+    
+    function updateCartUI() {
+      const badge = document.getElementById('cart-badge');
+      const itemsContainer = document.getElementById('cart-items');
+      const emptyCart = document.getElementById('cart-empty');
+      const footer = document.getElementById('cart-footer');
+      const subtotal = document.getElementById('cart-subtotal');
+      const total = document.getElementById('cart-total');
+      
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      
+      badge.textContent = totalItems;
+      
+      if (cart.length === 0) {
+        itemsContainer.innerHTML = '';
+        emptyCart.classList.remove('hidden');
+        footer.classList.add('hidden');
+        return;
+      }
+      
+      emptyCart.classList.add('hidden');
+      footer.classList.remove('hidden');
+      subtotal.textContent = `${totalPrice.toLocaleString()} FCFA`;
+      total.textContent = `${totalPrice.toLocaleString()} FCFA`;
+      
+      itemsContainer.innerHTML = cart.map(item => `
+        <div class="cart-item-enter bg-gradient-to-br from-gray-50 to-white rounded-2xl p-4 shadow-md border-2 border-gray-100">
+          <div class="flex items-center gap-4">
+            <div class="text-5xl">${item.image_emoji || '📦'}</div>
+            
+            <div class="flex-1">
+              <h5 class="font-bold text-gray-800 text-base mb-1">${item.name}</h5>
+              <p class="text-sm text-gray-500 mb-2">Stock: ${item.stock}</p>
+              <p class="font-display font-black text-purple-600 text-lg">${item.price.toLocaleString()} FCFA</p>
+            </div>
+            
+            <button onclick="removeFromCart('${item.id}')" class="p-2 text-red-500 hover:bg-red-50 rounded-xl transition-all">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+              </svg>
+            </button>
+          </div>
+          
+          <div class="flex items-center justify-between mt-4 pt-4 border-t-2 border-gray-100">
+            <span class="text-sm font-semibold text-gray-600">Quantité:</span>
+            <div class="flex items-center gap-3">
+              <button onclick="updateQuantity('${item.id}', -1)" class="w-9 h-9 bg-gray-200 hover:bg-gray-300 rounded-xl flex items-center justify-center font-bold text-lg transition-all">
+                −
+              </button>
+              <span class="font-bold text-xl w-10 text-center">${item.quantity}</span>
+              <button onclick="updateQuantity('${item.id}', 1)" class="w-9 h-9 gradient-primary text-white rounded-xl flex items-center justify-center font-bold text-lg transition-all">
+                +
+              </button>
+            </div>
+          </div>
+          
+          <div class="mt-3 pt-3 border-t-2 border-gray-100 flex justify-between items-center">
+            <span class="text-sm font-semibold text-gray-600">Sous-total:</span>
+            <span class="font-display font-black text-gray-800 text-xl">${(item.price * item.quantity).toLocaleString()} FCFA</span>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function toggleCart() {
+      const sidebar = document.getElementById('cart-sidebar');
+      const overlay = document.getElementById('cart-overlay');
+      
+      const isOpen = !sidebar.classList.contains('translate-x-full');
+      
+      if (isOpen) {
+        sidebar.classList.add('translate-x-full');
+        overlay.classList.add('hidden');
+      } else {
+        sidebar.classList.remove('translate-x-full');
+        overlay.classList.remove('hidden');
+      }
+    }
+    
+    // Checkout
+    function checkout() {
+      if (cart.length === 0) {
+        showToast('Votre panier est vide', '⚠️');
+        return;
+      }
+      
+      const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const timestamp = new Date().toLocaleString('fr-FR', { 
+        dateStyle: 'full', 
+        timeStyle: 'short' 
+      });
+      
+      let message = `🛒 *NOUVELLE COMMANDE*\n\n`;
+      message += `📅 Date: ${timestamp}\n`;
+      message += `━━━━━━━━━━━━━━━━━\n\n`;
+      message += `📦 *DÉTAILS DE LA COMMANDE:*\n\n`;
+      
+      cart.forEach((item, index) => {
+        message += `${index + 1}. *${item.name}*\n`;
+        message += `   ${item.image_emoji || '📦'} Quantité: ${item.quantity}\n`;
+        message += `   💰 Prix unitaire: ${item.price.toLocaleString()} FCFA\n`;
+        message += `   📊 Sous-total: ${(item.price * item.quantity).toLocaleString()} FCFA\n\n`;
+      });
+      
+      message += `━━━━━━━━━━━━━━━━━\n`;
+      message += `💵 *TOTAL: ${totalPrice.toLocaleString()} FCFA*\n`;
+      message += `━━━━━━━━━━━━━━━━━\n\n`;
+      
+      if (userLocation) {
+        message += `📍 *LOCALISATION DU CLIENT:*\n`;
+        message += `• Latitude: ${userLocation.lat.toFixed(6)}\n`;
+        message += `• Longitude: ${userLocation.lng.toFixed(6)}\n`;
+        message += `• Précision: ±${userLocation.accuracy}m\n`;
+        message += `• Google Maps: https://www.google.com/maps?q=${userLocation.lat},${userLocation.lng}\n\n`;
+      } else {
+        message += `📍 *Localisation: Non disponible*\n\n`;
+      }
+      
+      message += `✨ Merci pour votre commande!`;
+      
+      // WhatsApp
+      const whatsappMsg = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMsg}`;
+      window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+      
+      // Email
+      const emailSubject = encodeURIComponent(`🛒 Nouvelle Commande - ${new Date().toLocaleDateString('fr-FR')}`);
+      const emailBody = encodeURIComponent(message.replace(/\*/g, '').replace(/━/g, '-'));
+      const emailUrl = `mailto:${EMAIL_ADDRESS}?subject=${emailSubject}&body=${emailBody}`;
+      
+      setTimeout(() => {
+        window.open(emailUrl, '_blank', 'noopener,noreferrer');
+      }, 1500);
+      
+      showToast('Commande envoyée avec succès! 🎉', '✅');
+      
+      setTimeout(() => {
+        cart = [];
+        updateCartUI();
+        toggleCart();
+      }, 2000);
+    }
+    
+    // Admin Panel
+    function showAdminPanel() {
+      document.getElementById('admin-modal').classList.remove('hidden');
+      renderAdminProducts();
+    }
+    
+    function closeAdminPanel() {
+      document.getElementById('admin-modal').classList.add('hidden');
+    }
+    
+    function renderAdminProducts() {
+      const list = document.getElementById('admin-products');
+      const empty = document.getElementById('admin-empty');
+      const count = document.getElementById('admin-count');
+      
+      count.textContent = products.length;
+      
+      if (products.length === 0) {
+        list.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+      
+      empty.classList.add('hidden');
+      
+      list.innerHTML = products.map(product => `
+        <div class="bg-gradient-to-r from-gray-50 to-white rounded-xl p-4 flex items-center gap-4 border-2 border-gray-100 hover:border-purple-200 transition-all">
+          <span class="text-4xl">${product.image_emoji || '📦'}</span>
+          
+          <div class="flex-1">
+            <h5 class="font-bold text-gray-800 mb-1">${product.name}</h5>
+            <div class="flex items-center gap-3 text-sm">
+              <span class="font-bold text-purple-600">${product.price.toLocaleString()} FCFA</span>
+              <span class="text-gray-500">Stock: ${product.stock}</span>
+            </div>
+          </div>
+          
+          <button onclick="deleteProduct('${product.__backendId}')" class="p-3 text-red-500 hover:bg-red-50 rounded-xl transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+          </button>
+        </div>
+      `).join('');
+    }
+    
+    async function deleteProduct(backendId) {
+      const product = products.find(p => p.__backendId === backendId);
+      if (!product) return;
+      
+      const btn = event.target.closest('button');
+      btn.disabled = true;
+      btn.innerHTML = '<div class="w-5 h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>';
+      
+      const result = await window.dataSdk.delete(product);
+      
+      if (result.isOk) {
+        showToast('Produit supprimé', '🗑️');
+      } else {
+        showToast('Erreur lors de la suppression', '❌');
+        btn.disabled = false;
+        btn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>';
+      }
+    }
+    
+    // Product Form
+    document.getElementById('product-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      if (products.length >= 999) {
+        showToast('Limite de 999 produits atteinte', '⚠️');
+        return;
+      }
+      
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<div class="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin"></div> Ajout en cours...';
+      
+      const newProduct = {
+        id: `product_${Date.now()}`,
+        name: document.getElementById('product-name').value.trim(),
+        price: parseFloat(document.getElementById('product-price').value),
+        category: document.getElementById('product-category').value,
+        stock: parseInt(document.getElementById('product-stock').value) || 0,
+        image_emoji: document.getElementById('product-emoji').value,
+        description: document.getElementById('product-description').value.trim(),
+        createdAt: new Date().toISOString()
+      };
+      
+      const result = await window.dataSdk.create(newProduct);
+      
+      btn.disabled = false;
+      btn.innerHTML = '<span class="text-xl">➕</span><span>Ajouter le Produit</span>';
+      
+      if (result.isOk) {
+        document.getElementById('product-form').reset();
+        showToast('Produit ajouté avec succès! ✨', '✅');
+        renderAdminProducts();
+      } else {
+        showToast('Erreur lors de l\'ajout du produit', '❌');
+      }
+    });
+    
+    // Data SDK Handler
+    const dataHandler = {
+      onDataChanged(data) {
+        products = data;
+        renderProducts();
+        if (document.getElementById('admin-modal').classList.contains('hidden') === false) {
+          renderAdminProducts();
+        }
+      }
+    };
+    
+    // Element SDK Functions
+    function updateUI() {
+      const shopName = config.shop_name || defaultConfig.shop_name;
+      const tagline = config.shop_tagline || defaultConfig.shop_tagline;
+      const welcomeMsg = config.welcome_message || defaultConfig.welcome_message;
+      const footerText = config.footer_text || defaultConfig.footer_text;
+      
+      document.getElementById('nav-brand').textContent = shopName;
+      document.getElementById('hero-title').textContent = shopName;
+      document.getElementById('hero-tagline').textContent = tagline;
+      document.getElementById('welcome-msg').textContent = welcomeMsg;
+      document.getElementById('footer-text').textContent = footerText;
+    }
+    
+    async function onConfigChange(newConfig) {
+      config = newConfig;
+      updateUI();
+    }
+    
+    function mapToCapabilities(cfg) {
+      return {
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+    
+    function mapToEditPanelValues(cfg) {
+      return new Map([
+        ['shop_name', cfg.shop_name || defaultConfig.shop_name],
+        ['shop_tagline', cfg.shop_tagline || defaultConfig.shop_tagline],
+        ['welcome_message', cfg.welcome_message || defaultConfig.welcome_message],
+        ['footer_text', cfg.footer_text || defaultConfig.footer_text]
+      ]);
+    }
+    
+    // Initialize
+    async function init() {
+      // Element SDK
+      if (window.elementSdk) {
+        await window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities,
+          mapToEditPanelValues
+        });
+        config = window.elementSdk.config || defaultConfig;
+      } else {
+        config = defaultConfig;
+      }
+      
+      updateUI();
+      
+      // Data SDK
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error('Erreur Data SDK');
+        }
+      }
+      
+      // Geolocation
+      initGeolocation();
+      
+      // Update UI
+      updateCartUI();
+    }
+    
+    // Event Listeners
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeAdminPanel();
+        const cartSidebar = document.getElementById('cart-sidebar');
+        if (!cartSidebar.classList.contains('translate-x-full')) {
+          toggleCart();
+        }
+      }
+    });
+    
+    document.getElementById('admin-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'admin-modal') {
+        closeAdminPanel();
+      }
+    });
+    
+    // Start
+    init();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9bf9560b42da534a',t:'MTc2ODY4OTQzNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
